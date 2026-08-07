@@ -1,0 +1,573 @@
+{% extends "portal/base.html" %}
+
+{% block title %}
+BB Family - Member Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+```
+<!-- Header -->
+<div class="mb-4">
+    <h2 class="fw-bold">
+        Karibu, {{ member.first_name }}
+    </h2>
+
+    <p class="text-muted mb-0">
+        Member Number:
+        <strong>{{ member.member_number }}</strong>
+    </p>
+</div>
+
+
+<!-- SUMMARY CARDS -->
+<div class="row g-4">
+
+    <!-- Total Required -->
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Total Required
+                        </p>
+
+                        <h3 class="fw-bold">
+                            TZS {{ status.required }}
+                        </h3>
+
+                    </div>
+
+                    <div class="fs-1 text-primary">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Total Paid -->
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Total Paid
+                        </p>
+
+                        <h3 class="fw-bold text-success">
+                            TZS {{ status.paid }}
+                        </h3>
+
+                    </div>
+
+                    <div class="fs-1 text-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Outstanding -->
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-muted mb-1">
+                            Outstanding
+                        </p>
+
+                        <h3 class="fw-bold text-danger">
+                            TZS {{ status.balance }}
+                        </h3>
+
+                    </div>
+
+                    <div class="fs-1 text-danger">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CONTRIBUTION PROGRESS -->
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between mb-2">
+
+            <strong>
+                Contribution Progress
+            </strong>
+
+            <span>
+                {{ status.percentage }}%
+            </span>
+
+        </div>
+
+        <div class="progress" style="height: 12px;">
+
+            <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ status.percentage }}%;"
+                aria-valuenow="{{ status.percentage }}"
+                aria-valuemin="0"
+                aria-valuemax="100">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MEMBERSHIP STATUS -->
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-body text-center p-4">
+
+        {% if status.membership_status == "ACTIVE" %}
+
+            <div class="mb-3">
+
+                <i class="bi bi-check-circle-fill text-success"
+                   style="font-size: 55px;">
+                </i>
+
+            </div>
+
+            <span class="badge bg-success fs-6 px-4 py-2">
+                ACTIVE
+            </span>
+
+            <h5 class="mt-3 fw-bold">
+                Uanachama wako uko katika hali nzuri
+            </h5>
+
+            <p class="text-muted mb-0">
+                {{ status.membership_message }}
+            </p>
+
+
+        {% elif status.membership_status == "WARNING" %}
+
+            <div class="mb-3">
+
+                <i class="bi bi-exclamation-triangle-fill text-warning"
+                   style="font-size: 55px;">
+                </i>
+
+            </div>
+
+            <span class="badge bg-warning text-dark fs-6 px-4 py-2">
+                WARNING
+            </span>
+
+            <h5 class="mt-3 fw-bold">
+                Tafadhali zingatia michango yako
+            </h5>
+
+            <p class="text-muted mb-0">
+                {{ status.membership_message }}
+            </p>
+
+
+        {% else %}
+
+            <div class="mb-3">
+
+                <i class="bi bi-x-circle-fill text-danger"
+                   style="font-size: 55px;">
+                </i>
+
+            </div>
+
+            <span class="badge bg-danger fs-6 px-4 py-2">
+                INACTIVE
+            </span>
+
+            <h5 class="mt-3 fw-bold text-danger">
+                Uanachama wako uko INACTIVE
+            </h5>
+
+            <p class="text-muted">
+                {{ status.membership_message }}
+            </p>
+
+            <div class="alert alert-danger mt-3 mb-0">
+
+                <i class="bi bi-info-circle"></i>
+
+                <strong>Muhimu:</strong>
+
+                Kumaliza deni hakutafuta historia yako
+                ya uanachama.
+
+                Baada ya kukamilisha madeni,
+                hali yako inaweza kurejeshwa kuwa
+                <strong>ACTIVE</strong>.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- CURRENT MONTH + OVERALL DEBT -->
+<div class="row g-4 mt-1">
+
+
+    <!-- CURRENT CONTRIBUTION -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body p-4">
+
+                <div class="d-flex align-items-center mb-3">
+
+                    <div class="fs-2 text-primary me-3">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h5 class="fw-bold mb-0">
+                            Current Contribution
+                        </h5>
+
+                        <small class="text-muted">
+
+                            {{ status.current_month }}
+                            {{ status.current_year }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-6">
+
+                        <small class="text-muted">
+                            Required
+                        </small>
+
+                        <h5 class="fw-bold">
+                            TZS {{ status.current_month_required }}
+                        </h5>
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <small class="text-muted">
+                            Paid
+                        </small>
+
+                        <h5 class="fw-bold text-success">
+                            TZS {{ status.current_month_paid }}
+                        </h5>
+
+                    </div>
+
+                </div>
+
+
+                {% if status.current_month_balance > 0 %}
+
+                    <div class="alert alert-warning mt-3 mb-0">
+
+                        <i class="bi bi-exclamation-circle"></i>
+
+                        {{ status.current_month_message }}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success mt-3 mb-0">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        {{ status.current_month_message }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- OVERALL DEBT -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body p-4">
+
+                <div class="d-flex align-items-center mb-3">
+
+                    <div class="fs-2 text-danger me-3">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h5 class="fw-bold mb-0">
+                            Contribution Summary
+                        </h5>
+
+                        <small class="text-muted">
+
+                            Hadi {{ status.current_month }}
+                            {{ status.current_year }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                {% if status.balance > 0 %}
+
+                    <h3 class="fw-bold text-danger">
+
+                        TZS {{ status.balance }}
+
+                    </h3>
+
+                    <p class="text-muted mb-0">
+
+                        Hiki ndicho kiasi unachodaiwa
+                        hadi mwezi husika.
+
+                    </p>
+
+                {% else %}
+
+                    <h3 class="fw-bold text-success">
+
+                        TZS 0
+
+                    </h3>
+
+                    <p class="text-success mb-0">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        Umefanikisha michango yako
+                        hadi mwezi husika.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CONTRIBUTION HISTORY -->
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-body">
+
+        <h4 class="fw-bold mb-4">
+
+            <i class="bi bi-calendar3"></i>
+
+            Contribution History
+
+        </h4>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Month</th>
+
+                        <th>Required</th>
+
+                        <th>Paid</th>
+
+                        <th>Balance</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in statement %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.month }} {{ item.year }}
+                        </td>
+
+                        <td>
+                            TZS {{ item.required }}
+                        </td>
+
+                        <td class="text-success fw-semibold">
+                            TZS {{ item.paid }}
+                        </td>
+
+                        <td>
+
+                            {% if item.balance > 0 %}
+
+                                <span class="text-danger fw-semibold">
+                                    TZS {{ item.balance }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-success fw-semibold">
+                                    TZS 0
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if item.status == "Paid" %}
+
+                                <span class="badge bg-success">
+
+                                    <i class="bi bi-check"></i>
+
+                                    Paid
+
+                                </span>
+
+                            {% elif item.status == "Partial" %}
+
+                                <span class="badge bg-warning text-dark">
+
+                                    <i class="bi bi-hourglass-split"></i>
+
+                                    Partial
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    <i class="bi bi-x"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="text-center text-muted">
+
+                            Hakuna taarifa za michango.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

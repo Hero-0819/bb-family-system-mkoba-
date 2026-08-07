@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+{% block title %}
+BB Family
+{% endblock %}
+</title>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<!-- OPTION A: If you have a real icon in static/favicon.ico -->
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+<!-- OPTION B: Use this instead if you DON'T have an icon file yet (silences the 404 error) -->
+<!-- <link rel="icon" href="data:,"> -->
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#">
+            <i class="bi bi-people-fill"></i>
+            BB FAMILY
+        </a>
+
+        <div class="ms-auto text-white">
+            <i class="bi bi-shield-check"></i>
+            Member Portal
+        </div>
+    </div>
+</nav>
+
+{% block content %}
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

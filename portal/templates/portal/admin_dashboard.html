@@ -1,0 +1,447 @@
+{% extends "portal/base.html" %}
+
+{% block title %}
+BB Family - Admin Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+
+    <!-- Header -->
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+
+            <i class="bi bi-speedometer2"></i>
+
+            BB Family Admin Dashboard
+
+        </h2>
+
+        <p class="text-muted">
+
+            Muhtasari wa hali ya wanachama na michango.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- MEMBER CARDS -->
+
+    <div class="row g-4">
+
+
+        <!-- Total Members -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted">
+
+                        Total Members
+
+                    </p>
+
+                    <h2 class="fw-bold">
+
+                        {{ total_members }}
+
+                    </h2>
+
+                    <i class="bi bi-people fs-1 text-primary"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Active -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted">
+
+                        Active Members
+
+                    </p>
+
+                    <h2 class="fw-bold text-success">
+
+                        {{ active_members }}
+
+                    </h2>
+
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Warning -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted">
+
+                        Warning
+
+                    </p>
+
+                    <h2 class="fw-bold text-warning">
+
+                        {{ warning_members }}
+
+                    </h2>
+
+                    <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Inactive -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted">
+
+                        Inactive
+
+                    </p>
+
+                    <h2 class="fw-bold text-danger">
+
+                        {{ inactive_members }}
+
+                    </h2>
+
+                    <i class="bi bi-x-circle fs-1 text-danger"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FINANCIAL SUMMARY -->
+
+    <div class="row g-4 mt-1">
+
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <p class="text-muted">
+
+                        Total Payments Received
+
+                    </p>
+
+                    <h2 class="fw-bold text-success">
+
+                        TZS {{ total_paid }}
+
+                    </h2>
+
+                    <i class="bi bi-cash-stack fs-1 text-success"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <p class="text-muted">
+
+                        System Status
+
+                    </p>
+
+                    <h4 class="fw-bold text-success">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        System Running
+
+                    </h4>
+
+                    <p class="text-muted mb-0">
+
+                        BB Family contribution system
+                        iko tayari kutumika.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+<!-- RECENT PAYMENTS -->
+
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-body p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h4 class="fw-bold mb-1">
+
+                    <i class="bi bi-clock-history"></i>
+
+                    Recent Payments
+
+                </h4>
+
+                <p class="text-muted mb-0">
+
+                    Malipo 10 ya mwisho yaliyowekwa kwenye mfumo.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Member</th>
+
+                        <th>Amount</th>
+
+                        <th>Date</th>
+
+                        <th>Reference</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for payment in recent_payments %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="fw-semibold">
+
+                                {{ payment.member.first_name }}
+
+                                {{ payment.member.last_name }}
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                {{ payment.member.member_number }}
+
+                            </small>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="fw-bold text-success">
+
+                                TZS {{ payment.amount_paid }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ payment.payment_date }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if payment.reference_number %}
+
+                                <span class="badge bg-light text-dark">
+
+                                    {{ payment.reference_number }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-muted">
+
+                                    —
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="4"
+                            class="text-center text-muted py-4">
+
+                            Hakuna payment bado.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+<!-- Outstanding Members Section -->
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-white py-3">
+        <h5 class="fw-bold text-danger mb-0">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            Outstanding Members ({{ outstanding_members|length }})
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        {% if outstanding_members %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Member</th>
+                            <th>Number</th>
+                            <th>Total Paid</th>
+                            <th>Balance (Debt)</th>
+                            <th>Status</th>
+                            <th>Unpaid Months</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in outstanding_members %}
+                            <tr>
+                                <td class="fw-bold">
+                                    {{ item.member.first_name }} {{ item.member.last_name }}
+                                </td>
+                                <td>{{ item.member.member_number }}</td>
+                                <td class="text-success">TZS {{ item.paid }}</td>
+                                <td class="fw-bold text-danger">TZS {{ item.balance }}</td>
+                                <td>
+                                    {% if item.membership_status == "WARNING" %}
+                                        <span class="badge bg-warning text-dark">WARNING</span>
+                                    {% elif item.membership_status == "INACTIVE" %}
+                                        <span class="badge bg-danger">INACTIVE</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ item.membership_status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ item.unpaid_months }} Month(s)
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'dashboard' item.member.id %}" class="btn btn-sm btn-outline-primary">
+                                        View Portal
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="p-4 text-center text-success">
+                <i class="bi bi-check-circle fs-2 d-block mb-2"></i>
+                Hakuna wanachama wenye madeni kwa sasa!
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+body{
+
+    background:#f5f7fb;
+
+}
+
+
+.card{
+
+    border-radius:15px;
+
+}
+
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+    transition:0.3s;
+
+}
+
+
+.progress{
+
+    border-radius:20px;
+
+}
+
+
+.navbar-brand{
+
+    letter-spacing:1px;
+
+}
+
