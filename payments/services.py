@@ -39,63 +39,114 @@ def  next_month(year , month):
 
 def allocate_payment(payment):
 
-    member =payment.member
+    member = payment.member
     remaining = Decimal(payment.amount_paid)
 
-    print("MEMBER",member.member_number)
-    print("PAYMENT:",remaining)
+    print("MEMBER:", member.member_number)
+    print("PAYMENT:", remaining)
 
+    # Kila payment inaanzia November 2024
     year = SYSTEM_START_DATE.year
     month = SYSTEM_START_DATE.month
 
-    print("START:" , year ,month)
+    print("START:", year, month)
 
-    while remaining > 0:
+    # Usiruhusu allocation kwenda future
+    today = date.today()
 
-        print("CHECKING MONTH:", year,month)
+    months_checked = 0
+    max_months = 100
 
-        required = get_required_amount(year,month)
+    while remaining > 0 and months_checked < max_months:
 
-        print("REQUIRED :", required)
+        # Stop if we have reached a future month
+        if (year, month) > (today.year, today.month):
+            print("REACHED FUTURE MONTH")
+            break
 
-        allocated= get_allocated_amount(member,year,month)
+        print("CHECKING MONTH:", year, month)
 
-        print("ALREADY ALLOCATED :",allocated)
+        required = get_required_amount(year, month)
 
-        still_needed=required-allocated
+        print("REQUIRED:", required)
 
-        print("STILL NEEDED",still_needed)
+        allocated = get_allocated_amount(
+            member,
+            year,
+            month
+        )
 
+        print("ALREADY ALLOCATED:", allocated)
 
-        if required ==0:
+        still_needed = required - allocated
+
+        print("STILL NEEDED:", still_needed)
+
+        # Hakuna contribution rule
+        if required <= 0:
+
             print("NO RULE FOUND")
-            year , month = next_month(year ,month)
+
+            year, month = next_month(
+                year,
+                month
+            )
+
+            months_checked += 1
+
             continue
 
-        
+        # Mwezi umeshakamilika
+        if still_needed <= 0:
 
-        if still_needed <=0:
-            print(" MONTH COMPLETE")
-            year , month = next_month(year, month)
+            print("MONTH COMPLETE")
+
+            year, month = next_month(
+                year,
+                month
+            )
+
+            months_checked += 1
+
             continue
-        
-        allocated_amount = min(remaining, still_needed)
 
-        print("CREATING  ALLOCATION:", allocated_amount)
+        # Tumia payment kulipa deni la mwezi huu
+        allocated_amount = min(
+            remaining,
+            still_needed
+        )
+
+        print(
+            "CREATING ALLOCATION:",
+            allocated_amount
+        )
 
         PaymentAllocation.objects.create(
-                payment=payment,
-                contribution_month=month,
-                contribution_year=year,
-                amount_allocated=allocated_amount, 
-            )
-            
+            payment=payment,
+            contribution_month=month,
+            contribution_year=year,
+            amount_allocated=allocated_amount,
+        )
+
         remaining -= allocated_amount
 
-        print("REMAINING :",remaining)
+        print("REMAINING:", remaining)
 
+        # Endelea mwezi unaofuata
+        year, month = next_month(
+            year,
+            month
+        )
 
-        year, month = next_month(year, month)
+        months_checked += 1
+
+    if remaining > 0:
+
+        print(
+            "WARNING: Payment could not be fully allocated.",
+            "Remaining:",
+            remaining
+        )
 
 def get_total_paid(member):
     total = PaymentAllocation.objects.filter(
@@ -104,7 +155,7 @@ def get_total_paid(member):
         total=Sum("amount_allocated")
     )
 
-    return total["total"] or 0
+    return total["total"] or Decimal("0")
 
 
 def get_total_required():
